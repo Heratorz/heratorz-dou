@@ -35,7 +35,7 @@ class HackPanel extends JPanel
    
    void setBackGroundImage(Graphics2D g2) {
       BufferedImage bgImage = null;
-      try { bgImage = ImageIO.read(new File("bck.jpg")); }
+      try { bgImage = ImageIO.read(new File("img/bck.jpg")); }
       catch(Exception e) { e.printStackTrace(); }
       g2.drawImage(bgImage, 0, 0, null);
    }
