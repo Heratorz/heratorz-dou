@@ -58,8 +58,8 @@ public class WorldEnv
    
    //TODO full shit
    public boolean generateX(int side) {
-	   Harvester f =new Harvester(new Pt(20, 40), side, 2);
-	   all.add(f);
+	   Harvester f = new Harvester(new Pt(20, 40), side, 2, (Planet)all.get(1));
+	   all.add(f);		   
 	   return true;
    }
    
