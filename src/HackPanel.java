@@ -43,12 +43,12 @@ class HackPanel extends JPanel
    void drawGrid(Graphics2D g2) {
       // draw verticals
       for (int i = 0; i <= WC.W; i+=WC.SZ) {
-         g2.setColor((i == 0 || i == WC.W) ? Color.BLACK : Color.GRAY);
+         g2.setColor((i == 0 || i == WC.W) ? Color.BLACK : Color.LIGHT_GRAY);
          g2.drawLine(WC.LX+i, WC.LY, WC.LX+i, WC.LY+WC.H);
       }
       // draw horizontals
       for (int i = 0; i <= WC.H; i+=WC.SZ) {
-         g2.setColor((i == 0 || i == WC.H) ? Color.BLACK : Color.GRAY);
+         g2.setColor((i == 0 || i == WC.H) ? Color.BLACK : Color.LIGHT_GRAY);
          g2.drawLine(WC.LX, WC.LY+i, WC.LX+WC.W, WC.LY+i);
       }
    }
