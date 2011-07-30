@@ -36,6 +36,8 @@ public class WorldEnv
          if (!generatePlanet(i%2))
             return false;
       System.out.println("=====================");
+      //TODO full shit
+      generateX(0);
       return true;
    }
    
@@ -46,12 +48,19 @@ public class WorldEnv
       Pt p = getPossiblePlace(size, closest);
       if (p != null) {
          Planet cur = new Planet(p, side, size);
-         all.add(cur);
+         all.add(cur);         
          planets.add(cur);
          System.out.println("Planet generated: " + cur.p.toString());
          return true;
       }
       return false;
+   }
+   
+   //TODO full shit
+   public boolean generateX(int side) {
+	   Harvester f =new Harvester(new Pt(20, 40), side, 2);
+	   all.add(f);
+	   return true;
    }
    
    public Pt getPossiblePlace(int size, double minDistPossible) {
