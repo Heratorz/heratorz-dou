@@ -1,0 +1,6 @@
+syntax: glob
+bin\
+.classpath
+.settings/org.eclipse.jdt.ui.prefs
+.settings/org.eclipse.jdt.core.prefs
+.project
