@@ -38,8 +38,7 @@ public class WorldEnv
       for (int i = 0; i < WC.N; i++)
          for (int j = 0; j < WC.M; j++)
             randomPoints.add(new Pt(i, j));
-      if (!generateWorld())
-         KissMyAsser.errorFound();
+      generateWorld();
       try {
 		  selection = ImageIO.read(new File("img/selection.gif"));
    	  }
@@ -189,8 +188,14 @@ public class WorldEnv
       Utils.randomShuffle(randomPoints);
          if (!generatePlanet(0, 14)) continue Gen;
          if (!generatePlanet(1, 14)) continue Gen;
-      for (int i = 0; i < 4; i++)
-            if (!generateSource()) continue Gen;
+      int countSource = 4;
+      for (int i = 0; i < countSource; i++){
+    	  if(i >= countSource/2)
+    		  if (!generateSource(SourceType.WOOD)) 
+    			  break;    	  
+		  else if (!generateSource(SourceType.GOLD)) 
+				  break;
+      }
       selected = null;
          break;
       }
