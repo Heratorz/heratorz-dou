@@ -1,5 +1,8 @@
-import java.awt.Graphics2D;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -15,23 +18,38 @@ abstract class FlyObject
    private final int dx[] = {-1, 0, 1, 0};
    private final int dy[] = {0, 1, 0, -1};
    
+   private BufferedImage selection;
+   
    public FlyObject(Pt P, int Side, int Size, int Id) {
       p = P;
       side = Side;
       size = Size;
       id = Id;
       selected = false;
+      
+      try {
+		  selection = ImageIO.read(new File("img/selection.png"));
+   	  }
+	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
+   }
+   
+   public void drawSelection(Graphics2D g2) {
+	   if (selected)
+	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
+   }
+   
+   public void drawInfo(Graphics2D g2) {
+       g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
    }
    
    public void paint(Graphics2D g2) {
       Color c = side == 0 ? Color.BLUE : side == 1 ? Color.RED : Color.DARK_GRAY;
-      if (selected) {
-         g2.setColor(c.brighter());
-         g2.fillOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
-      }
+//      if (selected) {
+//         g2.setColor(c.brighter());
+//         g2.fillOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
+//      }
       g2.setColor(c);
 //      g2.drawOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
-      g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
       //System.out.println(p.toString());
    }
    
