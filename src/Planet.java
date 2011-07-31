@@ -11,19 +11,45 @@ public class Planet extends FlyObject
 {
    public Planet(Pt P, int Side, int Size) {
       super(P, Side, Size);
-      imageFileName = "img/planet_" + ((new Random()).nextInt(3) + 1) + ".png";
+      image = null;
+      selection = null;
+	  imageFileName = 
+			   "img/planet_" + 
+				((new Random()).nextInt(4) + 1);
+      loadImage(imageFileName);
+      
+      try {
+		  selection = ImageIO.read(new File("img/selection.png"));
+      }
+	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
    }
    
    @Override
    public void paint(Graphics2D g2) {
-	   BufferedImage image = null;
-	   try {
-		   image = ImageIO.read(new File(imageFileName));
-	   }
-	   catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
 	   g2.drawImage(image, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
+//	   if (selected или как там?)
+//	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
 	   super.paint(g2);
    }
    
+   public Harvester generateHarvester() {
+	   return null;
+   }
+   
+   public Fighter generateFigher() {
+	   return null;
+   }
+   
+   private void loadImage(String baseFileName) {
+	   // TODO: reinitialize on side changed
+	   baseFileName += side == 0? "" : side == 1? "_r" : "_g";
+	   try {
+		   image = ImageIO.read(new File(baseFileName + ".png"));
+	   }
+	   catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
+   }
+   
    private String imageFileName;
+   private BufferedImage image;
+   private BufferedImage selection;
 }
