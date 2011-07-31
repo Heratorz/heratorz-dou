@@ -35,7 +35,6 @@ public class Harvester extends FlyObject
 		//super.paint(g2);
         g2.drawImage(image, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
         drawInfo(g2);
-	      drawSelection(g2);
 	} 
 
    public String toString() {
