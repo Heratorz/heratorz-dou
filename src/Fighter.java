@@ -3,8 +3,10 @@
  */
 public class Fighter extends FlyObject
 {
-   public Fighter(Pt P, int Side, int Size) {
-      super(P, Side, Size);
-   }
+   public static final int priceGold = 10;
+   public static final int priceWood = 10;
    
+   public Fighter(Pt P, int Side, int Id) {
+      super(P, Side, 4, Id);
+   }
 }

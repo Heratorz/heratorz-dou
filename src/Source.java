@@ -3,8 +3,11 @@
  */
 public class Source extends FlyObject
 {
-   public Source(Pt P, int Side, int Size) {
-      super(P, Side, Size);
+   public Source(Pt P, int Size, int Id) {
+      super(P, -1, Size, Id);
    }
    
+   public String toString() {
+      return "source";
+   }
 }
