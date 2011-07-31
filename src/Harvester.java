@@ -1,5 +1,9 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-
 /**
  * Harvester unit's wrapper  
  */
@@ -19,10 +23,20 @@ public class Harvester extends FlyObject
       targetPlanet = home;
    }
 
+   @Override
+	public void paint(Graphics2D g2) {
+		// TODO Auto-generated method stub
+		//super.paint(g2);
+	   BufferedImage bgImage = null;
+	      try { bgImage = ImageIO.read(new File("img/harvester.png")); }
+	      catch(Exception e) { e.printStackTrace(); }
+	      g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
+	} 
+
    public String toString() {
       return "harvester";
    }
-   
+
    public void makeTurn() {
       if (cargoGold != 0 || cargoWood != 0) goHome();
       else goMine();
@@ -55,4 +69,5 @@ public class Harvester extends FlyObject
          //JOptionPane.showMessageDialog(null, "Harvester moves at work!");
       }
    }
+
 }
