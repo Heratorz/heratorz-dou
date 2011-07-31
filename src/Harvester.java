@@ -66,19 +66,27 @@ public class Harvester extends FlyObject
     	 {
     		 if (targetMine.amount <= 0)
     			 return;
-    		 else if(targetMine.amount - WC.HarvCanTakeGold < 0)
-    			 cargoGold += targetMine.amount - WC.HarvCanTakeGold;
-    		 else
+    		 else if(targetMine.amount - WC.HarvCanTakeGold < 0){
+    			 cargoGold += targetMine.amount;
+    			 targetMine.amount = 0;
+    		 }
+    		 else{
     			 cargoGold += WC.HarvCanTakeGold;
+    			 targetMine.amount -= WC.HarvCanTakeGold;
+    		 }
     	 }
     	 else
     	 {
     		 if (targetMine.amount <= 0)
     			 return;
-    		 else if(targetMine.amount - WC.HarvCanTakeWood < 0)
-    			 cargoWood += targetMine.amount - WC.HarvCanTakeWood;
-    		 else
+    		 else if(targetMine.amount - WC.HarvCanTakeWood < 0){
+    			 cargoWood += targetMine.amount;
+    			 targetMine.amount = 0;
+    		 }
+    		 else{
     			 cargoWood += WC.HarvCanTakeWood;
+    			 targetMine.amount -= WC.HarvCanTakeWood;
+    		 }
     	 }
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }

@@ -1,5 +1,6 @@
 import java.util.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -163,16 +164,21 @@ public class WorldEnv
       g2.setColor(Color.BLACK);
       // Blue player (#1)
       g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
-      g2.drawString("[ Blue player ]", WC.LX+WC.W+20, 280);
+      g2.drawString("[ Blue player ]", WC.LX+WC.W+20, 240);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold1, WC.LX+WC.W+35, 310);
-      g2.drawString("Wood: " + wood1, WC.LX+WC.W+35, 335);
+      g2.drawString("Gold: " + gold1, WC.LX+WC.W+35, 270);
+      g2.drawString("Wood: " + wood1, WC.LX+WC.W+35, 295);
       // Red player (#2)
       g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
-      g2.drawString("[ Red player ]", WC.LX+WC.W+20, 380);
+      g2.drawString("[ Red player ]", WC.LX+WC.W+20, 340);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 450);
-      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 475);
+      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 370);
+      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 395);
+      
+      Stroke drawingStroke = new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{8}, 0);
+ 	  Line2D line = new Line2D.Double(WC.LX+WC.W+14, 410, WC.LX+WC.W+153, 410);
+ 	  g2.setStroke(drawingStroke);
+      g2.draw(line);
    }
    
    public void generateWorld() {
@@ -254,5 +260,70 @@ public class WorldEnv
             return p;
       }
       return null;
+   }
+   
+   public boolean canUpgradeDamage(){
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.damage >= WC.DamMax){
+			   return false;
+		   }
+		   int cost = (f.damage + 1) * WC.DamUpgrCost;
+		   
+		   if(gold1 >= cost)
+			   return true;	   
+	   }
+	   return false;
+   }
+   
+   public boolean canUpgradeDefence()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.defence >= WC.DefMax){
+			   return false;
+		   }
+		   int cost = (f.defence + 1) * WC.DefUpgrCost;
+		   
+		   if(wood1 >= cost)
+			   return true;	   
+	   }
+	   return false;
+   }  
+   
+   public void upgradeDefence()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.defence >= WC.DefMax){
+			   return;
+		   }
+		   int cost = (f.defence) * WC.DefUpgrCost;
+		   
+		   if(wood1 >= cost)
+		   {
+			   f.defence++;
+			   wood1 -= WC.DefUpgrCost;
+		   }	   
+	   }
+	   return;
+   }
+   
+   public void upgradeDamage()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.damage >= WC.DamMax){
+			   return;
+		   }
+		   int cost = (f.damage) * WC.DamUpgrCost;
+		   
+		   if(gold1 >= cost)
+		   {
+			   f.damage++;
+			   gold1 -= WC.DamUpgrCost;
+		   }  
+	   }
+	   return;
    }
 }
