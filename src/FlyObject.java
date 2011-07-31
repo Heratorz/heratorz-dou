@@ -17,8 +17,7 @@ abstract class FlyObject
    boolean selected;
    private final int dx[] = {-1, 0, 1, 0};
    private final int dy[] = {0, 1, 0, -1};
-   
-   private BufferedImage selection;
+   private BufferedImage selectImg;
    
    public FlyObject(Pt P, int Side, int Size, int Id) {
       p = P;
@@ -26,51 +25,32 @@ abstract class FlyObject
       size = Size;
       id = Id;
       selected = false;
-      
-      try {
-		  selection = ImageIO.read(new File("img/selection.png"));
-   	  }
-	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
+      try { selectImg = ImageIO.read(new File("img/selection.png")); }
+	   catch (Exception e) { KissMyAsser.errorFound(); }
    }
    
    public void drawSelection(Graphics2D g2) {
 	   if (selected)
-	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
+	      g2.drawImage(selectImg, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
    }
    
    public void drawInfo(Graphics2D g2) {
-       g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
+      //g2.setColor(Color.BLACK);
+      //g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
    }
    
    public void paint(Graphics2D g2) {
       Color c = side == 0 ? Color.BLUE : side == 1 ? Color.RED : Color.DARK_GRAY;
-//      if (selected) {
-//         g2.setColor(c.brighter());
-//         g2.fillOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
-//      }
       g2.setColor(c);
-//      g2.drawOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
-      //System.out.println(p.toString());
+      g2.drawOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
+      drawSelection(g2);
+      drawInfo(g2);
    }
    
    public void setSelected(boolean state) {
       if (state == selected)
          KissMyAsser.errorFound();
       selected = state;
-   }
-   
-//   public boolean canMove(int Dx, int Dy, int N, int M) {
-//      int x2 = p.x+Dx;
-//      int y2 = p.y+Dy;
-//      return x2 >= 0 && x2 < N && y2 >= 0 && y2 < M;
-//   }
-   
-   public boolean canMove(Pt P) {
-      return P.x >= 0 && P.y >= 0 && P.x+size < WC.N && P.y+size < WC.M;
-   }
-   
-   public void move(Pt P) {
-      p = P;
    }
    
    public Pt getCenter() {
@@ -86,9 +66,7 @@ abstract class FlyObject
       return "Abstract";
    }
    
-   public void makeTurn() {
-      // Some objects (e.g. planets) do nothing automatically...
-   }
+   public void makeTurn() {}
    
    public boolean touchObject(FlyObject o2) {
       return Utils.getDistance(this, o2) <= 1e-7;
@@ -104,6 +82,7 @@ abstract class FlyObject
          this.p = new Pt(oldp.x+dx[i], oldp.y+dy[i]);
          if (p.x < 0 || p.x >= WC.N || p.y < 0 || p.y >= WC.M) continue;
          for (FlyObject obj : WorldEnv.all) if (obj.id != id) {
+            double dObj = Utils.getDistance(this, obj);
             if (touchObject(obj)) {
                if (obj.id != o2.id) continue Cycle;
                // our goal - make sure to select

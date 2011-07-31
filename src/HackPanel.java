@@ -63,7 +63,7 @@ class HackPanel extends JPanel
          public void mouseClicked(MouseEvent e) {
             Pt point = new Pt(e.getX(), e.getY());
             we.userClicked(point);
-      repaint();
+            repaint();
          }
       };
       this.addMouseListener(userClickListener);
