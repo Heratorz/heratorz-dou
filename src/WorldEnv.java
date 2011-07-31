@@ -171,9 +171,7 @@ public class WorldEnv
          //System.out.println("Planet generated: " + cur.p.toString());
          return true;
       }
-            return false;
-      System.out.println("=====================");
-      return true;
+      return false;
    }
    
    public boolean generateSource() {
@@ -192,11 +190,11 @@ public class WorldEnv
    }
    
    //TODO full shit
-   public boolean generateX(int side) {
-	   Harvester f =new Harvester(new Pt(5, 5), side, 2);
-	   all.add(f);
-	   return true;
-   }
+//   public boolean generateX(int side) {
+//	   Harvester f =new Harvester(new Pt(5, 5), side, 2);
+//	   all.add(f);
+//	   return true;
+//   }
    
    public Pt getPossiblePlace(int size, double minDistPossible) {
       // No generated object can be closer

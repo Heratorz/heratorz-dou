@@ -17,11 +17,6 @@ public class Planet extends FlyObject
 			   "img/planet_" + 
 				((new Random()).nextInt(4) + 1);
       loadImage(imageFileName);
-      
-      try {
-		  selection = ImageIO.read(new File("img/selection.png"));
-   	}
-	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
    }
 
    public String toString() {
@@ -32,8 +27,8 @@ public class Planet extends FlyObject
    @Override
    public void paint(Graphics2D g2) {
 	   g2.drawImage(image, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
-//	   if (selected ��� ��� ���?)
-//	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
+	   drawSelection(g2);
+	   drawInfo(g2);
 	   super.paint(g2);
    }
    
