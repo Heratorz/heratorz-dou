@@ -33,7 +33,7 @@ public class WorldEnv
       planets.clear();
       Utils.randomShuffle(randomPoints);
       for (int i = 0; i < 4; i++)
-         if (!generatePlanet(i%2))
+         if (!generatePlanet(i%3))
             return false;
       System.out.println("=====================");
       //TODO full shit
