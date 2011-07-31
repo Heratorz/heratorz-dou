@@ -8,8 +8,6 @@ import java.lang.Math.*;
 
 import sun.misc.Cleaner;
 
-import sun.misc.Cleaner;
-
 /**
  * Basic GUI panel
  */
@@ -64,6 +62,7 @@ class HackPanel extends JPanel implements MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		selectedObj = null;
 		for (FlyObject obj : this.we.all) {
 			int r = obj.size * WC.SZ;
 			int x = WC.LX + obj.p.x * WC.SZ + r;
