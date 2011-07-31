@@ -27,6 +27,7 @@ abstract class FlyObject
    }
    
    public void drawInfo(Graphics2D g2) {
+	   g2.setFont(new Font("SansSerif", Font.PLAIN, 16));
        g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
    }
    

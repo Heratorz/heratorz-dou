@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -63,8 +64,10 @@ public class Harvester extends FlyObject
    private void goMine() {
       if (targetMine == null) return;
       if (this.touchObject(targetMine)) {
-         cargoGold += 10;
-         cargoWood += 10;
+    	 if(targetMine.type == SourceType.GOLD)
+    		 cargoGold += 10;
+    	 else
+    		 cargoWood += 6;
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }
       else {
