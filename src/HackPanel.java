@@ -4,6 +4,9 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
+import java.lang.Math.*;
+
+import sun.misc.Cleaner;
 
 import sun.misc.Cleaner;
 
@@ -13,8 +16,7 @@ import sun.misc.Cleaner;
 class HackPanel extends JPanel implements MouseListener
 {
    WorldEnv we;
-   Label lbl = new Label("");
-   Component selectedElement = null;
+   FlyObject selectedObj = null;
    
    public HackPanel() {
       repaint();
@@ -28,15 +30,15 @@ class HackPanel extends JPanel implements MouseListener
       setBackGroundImage(g2);
       drawGrid(g2);
       we.drawWorld(g2);  
-
-      if(selectedElement == null){
-    	  lbl = new Label("Selected item: none");    	  
-      }
-      else{
-    	  lbl = new Label("Selected item: somewhere");
-      }      
-      //Component[] d = this.getComponents();
       
+      if(selectedObj == null)
+      {
+    	  add(new Label("Selected obj: none"));
+      }
+      else
+      {
+    	  add(new Label("Selected obj: " + selectedObj.p.toString()));
+      }
       //Component d = getComponent(0);
    }   
    
@@ -62,12 +64,14 @@ class HackPanel extends JPanel implements MouseListener
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		Component d = findComponentAt(e.getX(), e.getY());
-		if (d instanceof JPanel) {
-			selectedElement = d;
-		}   		
-		repaint();
+		for (FlyObject obj : this.we.all) {
+			int r = obj.size * WC.SZ;
+			int x = WC.LX + obj.p.x * WC.SZ + r;
+			int y = WC.LY + obj.p.y * WC.SZ + r;
+			//Sqrt((Xc-Xp)^2+(Yc-Yp)^2)<=R
+			if(Math.sqrt(Math.pow((x - e.getX()), 2) + Math.pow((y - e.getY()), 2)) < r)
+				selectedObj = obj;
+		}
 	}
 	
 	@Override
