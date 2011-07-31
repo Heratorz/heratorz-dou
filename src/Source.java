@@ -14,7 +14,6 @@ public class Source extends FlyObject
 	 Color c = side == 0 ? Color.BLUE : side == 1 ? Color.RED : Color.LIGHT_GRAY;
 	 g2.setColor(c);
      g2.fillOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
-     drawSelection(g2);
      drawInfo(g2);
    }
    
