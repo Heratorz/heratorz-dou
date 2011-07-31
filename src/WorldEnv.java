@@ -127,17 +127,17 @@ public class WorldEnv
          fo.paint(g2);
       g2.setColor(Color.BLACK);
       // Blue player (#1)
-      g2.setFont(new Font("SansSerif", Font.PLAIN, 22));
-      g2.drawString("[ Blue player ]", WC.LX+WC.W+20, 320);
+      g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
+      g2.drawString("[ Blue player ]", WC.LX+WC.W+20, 280);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold1, WC.LX+WC.W+35, 350);
-      g2.drawString("Wood: " + wood1, WC.LX+WC.W+35, 375);
+      g2.drawString("Gold: " + gold1, WC.LX+WC.W+35, 310);
+      g2.drawString("Wood: " + wood1, WC.LX+WC.W+35, 335);
       // Red player (#2)
-      g2.setFont(new Font("SansSerif", Font.PLAIN, 22));
-      g2.drawString("[ Red player ]", WC.LX+WC.W+20, 420);
+      g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
+      g2.drawString("[ Red player ]", WC.LX+WC.W+20, 380);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold1, WC.LX+WC.W+35, 450);
-      g2.drawString("Wood: " + wood1, WC.LX+WC.W+35, 475);
+      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 410);
+      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 435);
    }
    
    public boolean generateWorld() {
@@ -151,8 +151,14 @@ public class WorldEnv
       Utils.randomShuffle(randomPoints);
       if (!generatePlanet(0, 14)) return false;
       if (!generatePlanet(1, 14)) return false;
-      for (int i = 0; i < 4; i++)
-         if (!generateSource()) return false;
+      int countSource = 4;
+      for (int i = 0; i < countSource; i++){
+    	  if(i >= countSource/2)
+    		  if (!generateSource(SourceType.WOOD)) 
+    			  return false;    	  
+		  else if (!generateSource(SourceType.GOLD)) 
+				  return false;
+      }
       selected = null;
       return true;
    }
@@ -174,13 +180,14 @@ public class WorldEnv
       return false;
    }
    
-   public boolean generateSource() {
+   public boolean generateSource(SourceType type) {
       final int mn = 10, mx = 20, closest = 10;
       int size = mn + randomizer.nextInt(mx-mn+1);
       size -= size&1;
       Pt p = getPossiblePlace(size, closest);
       if (p != null) {
-         Source cur = new Source(p, size, idCounter++);
+    	 int rnd = (new Random()).nextInt(1);
+         Source cur = new Source(p, size, idCounter++, type, type == SourceType.GOLD ? WC.RGold * size : WC.RWood * size);
          all.add(cur);
          sources.add(cur);
          //System.out.println("Source generated: " + cur.p.toString());
@@ -188,13 +195,6 @@ public class WorldEnv
       }
       return false;
    }
-   
-   //TODO full shit
-//   public boolean generateX(int side) {
-//	   Harvester f =new Harvester(new Pt(5, 5), side, 2);
-//	   all.add(f);
-//	   return true;
-//   }
    
    public Pt getPossiblePlace(int size, double minDistPossible) {
       // No generated object can be closer

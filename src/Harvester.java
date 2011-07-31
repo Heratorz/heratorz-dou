@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -31,6 +32,7 @@ public class Harvester extends FlyObject
 	      try { bgImage = ImageIO.read(new File("img/harvester.png")); }
 	      catch(Exception e) { e.printStackTrace(); }
 	      g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
+	      drawSelection(g2);
 	} 
 
    public String toString() {
@@ -60,8 +62,10 @@ public class Harvester extends FlyObject
    private void goMine() {
       if (targetMine == null) return;
       if (this.touchObject(targetMine)) {
-         cargoGold += 10;
-         cargoWood += 10;
+    	 if(targetMine.type == SourceType.GOLD)
+    		 cargoGold += 10;
+    	 else
+    		 cargoWood += 6;
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }
       else {
