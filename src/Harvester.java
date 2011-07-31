@@ -4,7 +4,6 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 /**

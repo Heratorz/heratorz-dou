@@ -5,33 +5,40 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 
+import sun.misc.Cleaner;
+
 /**
  * Basic GUI panel
  */
-class HackPanel extends JPanel
+class HackPanel extends JPanel implements MouseListener
 {
    WorldEnv we;
-   
-   private class TestMouseAdapter extends MouseAdapter {
-      public void mouseClicked(MouseEvent e) {
-         we.generateWorld();
-         repaint();
-      }
-   }
+   Label lbl = new Label("");
+   Component selectedElement = null;
    
    public HackPanel() {
       repaint();
-      we = new WorldEnv();
-      this.addMouseListener(new TestMouseAdapter());
+      we = new WorldEnv();    
+      addMouseListener(this);
    }
    
-   public void paintComponent(Graphics g) {
-      super.paintComponent(g);
+   public void paintComponent(Graphics g) {	   
+      super.paintComponent(g);    
       Graphics2D g2 = (Graphics2D)g;
       setBackGroundImage(g2);
       drawGrid(g2);
-      we.drawWorld(g2);
-   }
+      we.drawWorld(g2);  
+
+      if(selectedElement == null){
+    	  lbl = new Label("Selected item: none");    	  
+      }
+      else{
+    	  lbl = new Label("Selected item: somewhere");
+      }      
+      //Component[] d = this.getComponents();
+      
+      //Component d = getComponent(0);
+   }   
    
    void setBackGroundImage(Graphics2D g2) {
       BufferedImage bgImage = null;
@@ -52,4 +59,34 @@ class HackPanel extends JPanel
          g2.drawLine(WC.LX, WC.LY+i, WC.LX+WC.W, WC.LY+i);
       }
    }
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		Component d = findComponentAt(e.getX(), e.getY());
+		if (d instanceof JPanel) {
+			selectedElement = d;
+		}   		
+		repaint();
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub	
+	}
+	
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub	
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub	
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub	
+	}
 }
