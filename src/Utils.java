@@ -14,9 +14,14 @@ public class Utils
       }
    }
    
-   // Returns Euclidean object-object distance  
+   // Returns Euclidean point-point distance  
    public static double getDistance(Pt a, Pt b) {
       return Math.sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
       //return Math.hypot(a.x-b.x, a.y-b.y);
+   }
+   
+// Returns Euclidean point-point distance  
+   public static double getDistance(FlyObject a, FlyObject b) {
+      return getDistance(a.getCenter(), b.getCenter()) - a.size/2. - b.size/2.;
    }
 }

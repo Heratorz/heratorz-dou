@@ -9,26 +9,26 @@ import javax.imageio.ImageIO;
  */
 public class Planet extends FlyObject
 {
-   public Planet(Pt P, int Side, int Size) {
-      super(P, Side, Size);
+   public Planet(Pt P, int Side, int Size, int Id) {
+      super(P, Side, Size, Id);
       image = null;
       selection = null;
 	  imageFileName = 
 			   "img/planet_" + 
 				((new Random()).nextInt(4) + 1);
       loadImage(imageFileName);
-      
-      try {
-		  selection = ImageIO.read(new File("img/selection.png"));
-      }
-	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
    }
+
+   public String toString() {
+      return "planet";
+   }
+
    
    @Override
    public void paint(Graphics2D g2) {
 	   g2.drawImage(image, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
-//	   if (selected или как там?)
-//	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
+	   drawSelection(g2);
+	   drawInfo(g2);
 	   super.paint(g2);
    }
    
