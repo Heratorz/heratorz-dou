@@ -35,8 +35,10 @@ abstract class FlyObject
    }
    
    public void drawInfo(Graphics2D g2) {
-       g2.setFont(new Font("SansSerif", Font.PLAIN, 16));
-       g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
+      g2.setColor(Color.BLACK);
+      g2.setFont(new Font("SansSerif", Font.PLAIN, 13));
+      g2.drawString("Object: " + toString(), WC.LX+(p.x+2)*WC.SZ, WC.LY+p.y*WC.SZ);
+      //g2.drawString("id: "+ id + " side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
    }
    
    public void paint(Graphics2D g2) {
@@ -94,9 +96,12 @@ abstract class FlyObject
          double d = Utils.getDistance(this, o2);
          if (d < dist-1e-9) { k = i; dist = d; }
       }
-      if (k == -1)
-         KissMyAsser.errorFound();
+      if (k == -1) { 
+         //KissMyAsser.errorFound();
+         this.p = oldp;
+         return false;
+      }
       this.p = new Pt(oldp.x+dx[k], oldp.y+dy[k]);
-      return false;
+      return true;
    }
 }

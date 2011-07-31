@@ -29,13 +29,12 @@ public class Source extends FlyObject
    public void paint(Graphics2D g2) {
      g2.drawImage(imageBack, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
      drawInfo(g2);
-     if(selected)
-     {
-    	 g2.setColor(Color.BLACK);
-    	 g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-         g2.drawString(type.toString(), WC.LX+WC.W+30, 470);
-         g2.drawString("Amount: ", WC.LX+WC.W+15, 490);
-         g2.drawString(Integer.toString(amount), WC.LX+WC.W+85, 490);
+     if(selected) {
+    	   g2.setColor(Color.BLACK);
+    	   g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
+         g2.drawString(type.toString() + " MINE:", WC.LX+WC.W+30, 490);
+         g2.drawString("Amount: ", WC.LX+WC.W+30, 510);
+         g2.drawString(Integer.toString(amount), WC.LX+WC.W+100, 510);
      }
    }
    

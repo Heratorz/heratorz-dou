@@ -15,7 +15,7 @@ public class Harvester extends FlyObject
    int cargoGold;
    int cargoWood;
    public static final int priceGold = 5;
-   public static final int priceWood = 5;
+   public static final int priceWood = 0;
    BufferedImage bgImage;
    
    private BufferedImage image;
@@ -62,23 +62,23 @@ public class Harvester extends FlyObject
    private void goMine() {
       if (targetMine == null) return;
       if (this.touchObject(targetMine)) {
-    	 if(targetMine.type == SourceType.GOLD)
+    	if(targetMine.type == SourceType.GOLD)
     	 {
-    		 if (targetMine.amount <= 0)
-    			 return;
-    		 else if(targetMine.amount - WC.HarvCanTakeGold < 0)
-    			 cargoGold += targetMine.amount - WC.HarvCanTakeGold;
-    		 else
-    			 cargoGold += WC.HarvCanTakeGold;
+    		 if (targetMine.amount <= 0) return;
+    		 int add = 0;
+    		 if(targetMine.amount - WC.HarvCanTakeGold < 0) add = targetMine.amount - WC.HarvCanTakeGold;
+    		 else add = WC.HarvCanTakeGold;
+    		 cargoGold += add;
+    		 targetMine.amount -= add;
     	 }
     	 else
     	 {
-    		 if (targetMine.amount <= 0)
-    			 return;
-    		 else if(targetMine.amount - WC.HarvCanTakeWood < 0)
-    			 cargoWood += targetMine.amount - WC.HarvCanTakeWood;
-    		 else
-    			 cargoWood += WC.HarvCanTakeWood;
+    		 if (targetMine.amount <= 0) return;
+    		 int add = 0;
+    		 if(targetMine.amount - WC.HarvCanTakeWood < 0) add = targetMine.amount - WC.HarvCanTakeWood;
+    		 else add = WC.HarvCanTakeWood;
+    		cargoWood += add;
+    		targetMine.amount -= add;
     	 }
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }

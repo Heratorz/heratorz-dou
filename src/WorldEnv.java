@@ -12,11 +12,11 @@ import javax.swing.JOptionPane;
 public class WorldEnv 
 {
    //TODO: Little WORKAROUND (remove static later...)
-   public static LinkedList<FlyObject> all;
-   LinkedList<Planet> planets;
+   public static ArrayList<FlyObject> all;
+   public static ArrayList<Planet> planets;
    LinkedList<Source> sources;
-   LinkedList<Harvester> harvesters;
-   LinkedList<Fighter> fighters;
+   public static ArrayList<Harvester> harvesters;
+   public static ArrayList<Fighter> fighters;
    LinkedList<Pt> randomPoints; // random-shuffled cords
    Random randomizer = new Random();
    static int gold1, gold2; // TODO: Little WORKAROUND (remove static later...)
@@ -29,11 +29,11 @@ public class WorldEnv
    public WorldEnv() {
 	  selection = null;
 	  
-      all = new LinkedList<FlyObject>();
-      planets = new LinkedList<Planet>();
+      all = new ArrayList<FlyObject>();
+      planets = new ArrayList<Planet>();
       sources = new LinkedList<Source>();
-      harvesters = new LinkedList<Harvester>();
-      fighters = new LinkedList<Fighter>();
+      harvesters = new ArrayList<Harvester>();
+      fighters = new ArrayList<Fighter>();
       randomPoints = new LinkedList<Pt>();
       for (int i = 0; i < WC.N; i++)
          for (int j = 0; j < WC.M; j++)
@@ -43,6 +43,31 @@ public class WorldEnv
 		  selection = ImageIO.read(new File("img/selection.gif"));
    	  }
 	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
+   }
+   
+   public static void killObject(FlyObject obj) {
+      int n = all.size();
+      for (int i = 0; i < n; i++) if (all.get(i).id == obj.id) {
+         all.set(i, all.get(n-1));
+         all.remove(n-1);
+         break;
+      }
+      if (obj.toString().equals("fighter")) {
+         n = fighters.size();
+         for (int i = 0; i < n; i++) if (fighters.get(i).id == obj.id) {
+            fighters.set(i, fighters.get(n-1));
+            fighters.remove(n-1);
+            break;
+         }
+      }
+      else if (obj.toString().equals("harvester")) {
+         n = harvesters.size();
+         for (int i = 0; i < n; i++) if (harvesters.get(i).id == obj.id) {
+            harvesters.set(i, harvesters.get(n-1));
+            harvesters.remove(n-1);
+            break;
+         }
+      }
    }
    
    public void buildHarvester() {
@@ -61,8 +86,8 @@ public class WorldEnv
    
    // TODO: fix code duplication
    public void buildFighter() {
-      if (!canBuildFighter())
-         KissMyAsser.errorFound();
+      //if (!canBuildFighter())
+      //   KissMyAsser.errorFound();
       //JOptionPane.showMessageDialog(null, "Build Fighter!");
       Pt p = (selected.getCenter().y < WC.M/2)
          ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size+2)
@@ -124,7 +149,7 @@ public class WorldEnv
          selected.setSelected(false);
       //TODO: WORKAROUND: use smth. like instanceof... (fix later)
       if (newSelect != null) newSelect.setSelected(true);
-      if (newSelect != null && selected != null) {
+      if (newSelect != null && selected != null && selected.side == 0) {
          String Old = selected.toString();
          String New = newSelect.toString();
          if (Old.equals("harvester")) {
@@ -139,12 +164,25 @@ public class WorldEnv
             newSelect.setSelected(false);
             newSelect = null;
          }
+         else if (Old.equals("fighter")) {
+            if (New.equals("planet") || New.equals("harvester") || New.equals("fighter")) {
+               ((Fighter)selected).killTarget = newSelect;
+               //JOptionPane.showMessageDialog(null, "Harvester selected source!");
+            }
+            newSelect.setSelected(false);
+            newSelect = null;
+         }
       }
       selected = newSelect;
    }
    
    // Next user's turn 
    public void nextTurn() {
+      for (Planet pl : planets)
+         if (pl.health == 0) {
+            JOptionPane.showMessageDialog(null, (pl.side == 1 ? "BLUE" : "RED") + " PLAYER WIN!!!");
+            return;
+         }
       //JOptionPane.showMessageDialog(null, "Next turn!");
       if (selected != null) {
          selected.setSelected(false);
@@ -152,6 +190,55 @@ public class WorldEnv
       }
       for (FlyObject obj : all)
          obj.makeTurn();
+      enemyTurn();
+   }
+   
+   private void enemyTurn() {
+      Planet pl = null;
+      for (Planet p : planets)
+         if (p.side == 1)
+            pl = p;
+      if (pl == null)
+         KissMyAsser.errorFound();
+      boolean canBuildSomeShit = true;
+      for (FlyObject obj : all)
+         if (obj.side == 1 && obj.id != pl.id)
+            if (Utils.getDistance(pl, obj) < 10)
+               canBuildSomeShit = false;
+      if (canBuildSomeShit) {
+         // Try build harvester
+         if (randomizer.nextBoolean()) {
+            if (gold2 >= Harvester.priceGold && wood2 >= Fighter.priceWood) {
+               Pt p = (pl.getCenter().y < WC.M/2)
+                  ? new Pt(pl.getCenter().x-2, pl.p.y+pl.size+2)
+                  : new Pt(pl.getCenter().x-2, pl.p.y-6); // Fix: WORKAROUND :)
+               Harvester unit = new Harvester(p, 1, idCounter++, pl);
+               all.add(unit);
+               harvesters.add(unit);
+               gold2 -= Harvester.priceGold;
+               wood2 -= Harvester.priceWood;
+               unit.targetMine = sources.get((new Random()).nextInt(sources.size()));
+            }
+         }
+         // Try build fighter
+         else {
+            if (gold2 >= Fighter.priceGold && wood2 >= Fighter.priceWood) {
+               Pt p = (pl.getCenter().y < WC.M/2)
+                  ? new Pt(pl.getCenter().x-2, pl.p.y+pl.size+2)
+                  : new Pt(pl.getCenter().x-2, pl.p.y-6); // Fix: WORKAROUND :)
+               Fighter unit = new Fighter(p, 1, idCounter++);
+               all.add(unit);
+               fighters.add(unit);
+               gold2 -= Fighter.priceGold;
+               wood2 -= Fighter.priceWood;
+               ArrayList<FlyObject> player1Units = new ArrayList<FlyObject>();
+               for (FlyObject fo : all) if (fo.side == 0)
+                  player1Units.add(fo);
+               unit.killTarget = player1Units.get((new Random()).nextInt(player1Units.size()));
+               //unit.targetMine = sources.get((new Random()).nextInt(sources.size()));
+            }
+         }
+      }
    }
    
    public void drawWorld(Graphics2D g2) {
@@ -171,8 +258,28 @@ public class WorldEnv
       g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
       g2.drawString("[ Red player ]", WC.LX+WC.W+20, 380);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 450);
-      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 475);
+      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 410);
+      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 435);
+      drawArrows(g2);
+   }
+   
+   public void drawArrows(Graphics2D g2) {
+      g2.setColor(new Color(0, 235, 0, 180));
+      for (Harvester h : harvesters)
+         if (h.targetPlanet != null && h.targetMine != null) {
+            g2.drawLine(WC.LX+h.targetPlanet.getCenter().x*WC.SZ, WC.LY+h.targetPlanet.getCenter().y*WC.SZ,
+                        WC.LX+h.getCenter().x*WC.SZ, WC.LY+h.getCenter().y*WC.SZ);
+            g2.drawLine(WC.LX+h.getCenter().x*WC.SZ, WC.LY+h.getCenter().y*WC.SZ,
+                        WC.LX+h.targetMine.getCenter().x*WC.SZ, WC.LY+h.targetMine.getCenter().y*WC.SZ);
+            g2.drawLine(WC.LX+h.targetPlanet.getCenter().x*WC.SZ, WC.LY+h.targetPlanet.getCenter().y*WC.SZ,
+                        WC.LX+h.targetMine.getCenter().x*WC.SZ, WC.LY+h.targetMine.getCenter().y*WC.SZ);
+         }
+      g2.setColor(new Color(235, 0, 0, 180));
+      for (Fighter f : fighters)
+         if (f.killTarget != null) {
+            g2.drawLine(WC.LX+f.killTarget.getCenter().x*WC.SZ, WC.LY+f.killTarget.getCenter().y*WC.SZ,
+                        WC.LX+f.getCenter().x*WC.SZ, WC.LY+f.getCenter().y*WC.SZ);
+         }
    }
    
    public void generateWorld() {
@@ -203,7 +310,7 @@ public class WorldEnv
    
    // Generate size randomly if corresponding parameter size == -1
    public boolean generatePlanet(int side, int size) {
-      final int mn = 10, mx = 20, closest = 10;
+      final int mn = 10, mx = 20, closest = 20;
       if (size == -1)
          size = mn + randomizer.nextInt(mx-mn+1);
       size -= size&1;
@@ -219,7 +326,7 @@ public class WorldEnv
    }
    
    public boolean generateSource(SourceType type) {
-      final int mn = 10, mx = 20, closest = 10;
+      final int mn = 10, mx = 20, closest = 20;
       int size = mn + randomizer.nextInt(mx-mn+1);
       size -= size&1;
       Pt p = getPossiblePlace(size, closest);

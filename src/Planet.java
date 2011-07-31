@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,8 +10,11 @@ import javax.imageio.ImageIO;
  */
 public class Planet extends FlyObject
 {
+   public int health;
+   
    public Planet(Pt P, int Side, int Size, int Id) {
       super(P, Side, Size, Id);
+      health = 10;
       image = null;
       selection = null;
 	   imageFileName = "img/planet_" + ((new Random()).nextInt(4) + 1);
@@ -23,6 +27,14 @@ public class Planet extends FlyObject
 
    @Override
    public void paint(Graphics2D g2) {
+      for (int i = 0; i < 10; i++) {
+         if (i < health) {
+            g2.setColor(Color.RED);
+            g2.fillRect(WC.LX+(getCenter().x-5+i)*WC.SZ, WC.LY+(getCenter().y-size/2-3)*WC.SZ, WC.SZ, WC.SZ);
+         }
+         g2.setColor(Color.BLACK);
+         g2.drawRect(WC.LX+(getCenter().x-5+i)*WC.SZ, WC.LY+(getCenter().y-size/2-3)*WC.SZ, WC.SZ, WC.SZ);
+      }
 	   g2.drawImage(image, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
 	   drawInfo(g2);
    }
