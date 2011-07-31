@@ -1,6 +1,9 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -30,8 +33,8 @@ public class Source extends FlyObject
      g2.drawImage(imageBack, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
      drawInfo(g2);
      if(selected) {
-    	   g2.setColor(Color.BLACK);
-    	   g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
+    	 g2.setColor(Color.BLACK);
+    	 g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
          g2.drawString(type.toString() + " MINE:", WC.LX+WC.W+30, 490);
          g2.drawString("Amount: ", WC.LX+WC.W+30, 510);
          g2.drawString(Integer.toString(amount), WC.LX+WC.W+100, 510);

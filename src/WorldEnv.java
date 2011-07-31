@@ -1,5 +1,6 @@
 import java.util.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -261,6 +262,11 @@ public class WorldEnv
       g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 410);
       g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 435);
       drawArrows(g2);
+
+      Stroke drawingStroke = new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{8}, 0);
+ 	  Line2D line = new Line2D.Double(WC.LX+WC.W+14, 410, WC.LX+WC.W+153, 410);
+ 	  g2.setStroke(drawingStroke);
+      g2.draw(line);
    }
    
    public void drawArrows(Graphics2D g2) {
@@ -361,5 +367,70 @@ public class WorldEnv
             return p;
       }
       return null;
+   }
+   
+   public boolean canUpgradeDamage(){
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.damage >= WC.DamMax){
+			   return false;
+		   }
+		   int cost = (f.damage + 1) * WC.DamUpgrCost;
+		   
+		   if(gold1 >= cost)
+			   return true;	   
+	   }
+	   return false;
+   }
+   
+   public boolean canUpgradeDefence()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.defence >= WC.DefMax){
+			   return false;
+		   }
+		   int cost = (f.defence + 1) * WC.DefUpgrCost;
+		   
+		   if(wood1 >= cost)
+			   return true;	   
+	   }
+	   return false;
+   }  
+   
+   public void upgradeDefence()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.defence >= WC.DefMax){
+			   return;
+		   }
+		   int cost = (f.defence) * WC.DefUpgrCost;
+		   
+		   if(wood1 >= cost)
+		   {
+			   f.defence++;
+			   wood1 -= WC.DefUpgrCost;
+		   }	   
+	   }
+	   return;
+   }
+   
+   public void upgradeDamage()
+   {
+	   if(selected != null && selected instanceof Fighter){
+		   Fighter f = (Fighter)selected;
+		   if(f.damage >= WC.DamMax){
+			   return;
+		   }
+		   int cost = (f.damage) * WC.DamUpgrCost;
+		   
+		   if(gold1 >= cost)
+		   {
+			   f.damage++;
+			   gold1 -= WC.DamUpgrCost;
+		   }  
+	   }
+	   return;
    }
 }
