@@ -4,9 +4,6 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
-import java.lang.Math.*;
-
-import sun.misc.Cleaner;
 
 import sun.misc.Cleaner;
 
