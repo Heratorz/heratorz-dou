@@ -25,14 +25,14 @@ public class Harvester extends FlyObject
       cargoGold = cargoWood = 0;
       targetMine = null;
       targetPlanet = home;
-      try { bgImage = ImageIO.read(new File("img/harvester.png")); }
+      try { bgImage = ImageIO.read(new File("img/harvester" + (Side == 0? "" : "_r") + ".png")); }
       catch(Exception e) { KissMyAsser.errorFound(); }
    }
 
    @Override
 	public void paint(Graphics2D g2) {
-	      g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
-        	drawInfo(g2);
+	    g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
+        drawInfo(g2);
 	} 
 
    public String toString() {
