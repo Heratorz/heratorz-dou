@@ -7,7 +7,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
-
 /**
  * Fighter unit's wrapper  
  */
@@ -19,9 +18,6 @@ public class Fighter extends FlyObject
    int damage = 1;
    int defence = 1;
    private BufferedImage bgImage;
-   
-   
-   BufferedImage bgImage;
    
    public Fighter(Pt P, int Side, int Id) {
       super(P, Side, 4, Id);
@@ -37,11 +33,10 @@ public class Fighter extends FlyObject
    
    @Override
    public void paint(Graphics2D g2) {
-	   super.paint(g2);
+	   g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
+	   drawInfo(g2);
 	   if(selected)
-	    g2.drawImage(bgImage, WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ, null);
-        drawInfo(g2);
-	   {
+	   {		   
 		   g2.setColor(Color.BLACK);
 		   g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		   g2.drawString("Damage: " + damage, WC.LX+WC.W+15, 450);
