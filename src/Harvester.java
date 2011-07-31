@@ -65,9 +65,23 @@ public class Harvester extends FlyObject
       if (targetMine == null) return;
       if (this.touchObject(targetMine)) {
     	 if(targetMine.type == SourceType.GOLD)
-    		 cargoGold += 10;
+    	 {
+    		 if (targetMine.amount <= 0)
+    			 return;
+    		 else if(targetMine.amount - WC.HarvCanTakeGold < 0)
+    			 cargoGold += targetMine.amount - WC.HarvCanTakeGold;
+    		 else
+    			 cargoGold += WC.HarvCanTakeGold;
+    	 }
     	 else
-    		 cargoWood += 6;
+    	 {
+    		 if (targetMine.amount <= 0)
+    			 return;
+    		 else if(targetMine.amount - WC.HarvCanTakeWood < 0)
+    			 cargoWood += targetMine.amount - WC.HarvCanTakeWood;
+    		 else
+    			 cargoWood += WC.HarvCanTakeWood;
+    	 }
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }
       else {
