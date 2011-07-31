@@ -25,7 +25,7 @@ public class Harvester extends FlyObject
       cargoGold = cargoWood = 0;
       targetMine = null;
       targetPlanet = home;
-      try { bgImage = ImageIO.read(new File("img/harvester.png")); }
+      try { bgImage = ImageIO.read(new File("img/harvester" + (Side == 0? "" : "_r") + ".png")); }
       catch(Exception e) { KissMyAsser.errorFound(); }
    }
 
@@ -62,7 +62,7 @@ public class Harvester extends FlyObject
    private void goMine() {
       if (targetMine == null) return;
       if (this.touchObject(targetMine)) {
-    	if(targetMine.type == SourceType.GOLD)
+    	 if(targetMine.type == SourceType.GOLD)
     	 {
     		 if (targetMine.amount <= 0) return;
     		 int add = 0;
