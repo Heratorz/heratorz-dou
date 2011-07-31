@@ -40,7 +40,6 @@ public class WorldEnv
             randomPoints.add(new Pt(i, j));
       if (!generateWorld())
          KissMyAsser.errorFound();
-      
       try {
 		  selection = ImageIO.read(new File("img/selection.gif"));
    	  }
@@ -52,8 +51,8 @@ public class WorldEnv
          KissMyAsser.errorFound();
       //JOptionPane.showMessageDialog(null, "Build Harvester!");
       Pt p = (selected.getCenter().y < WC.M/2)
-         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size)
-         : new Pt(selected.getCenter().x-2, selected.p.y-4); // Fix: WORKAROUND :)
+         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size+2)
+         : new Pt(selected.getCenter().x-2, selected.p.y-6); // Fix: WORKAROUND :)
       Harvester unit = new Harvester(p, 0, idCounter++, (Planet)selected);
       all.add(unit);
       harvesters.add(unit);
@@ -61,13 +60,14 @@ public class WorldEnv
       wood1 -= Harvester.priceWood;
    }
    
+   // TODO: fix code duplication
    public void buildFighter() {
       if (!canBuildFighter())
          KissMyAsser.errorFound();
       //JOptionPane.showMessageDialog(null, "Build Fighter!");
       Pt p = (selected.getCenter().y < WC.M/2)
-         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size)
-         : new Pt(selected.getCenter().x-2, selected.p.y-4); // Fix: WORKAROUND :)
+         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size+2)
+         : new Pt(selected.getCenter().x-2, selected.p.y-6); // Fix: WORKAROUND :)
       Fighter unit = new Fighter(p, 0, idCounter++);
       all.add(unit);
       fighters.add(unit);
@@ -75,20 +75,39 @@ public class WorldEnv
       wood1 -= Fighter.priceWood;
    }
    
+   // TODO: fix code duplication
    public boolean canBuildHarvester() {
-      return selected != null &&
-      selected.toString().equals("planet") &&
-      selected.side == 0 &&
-      gold1 > Harvester.priceGold &&
-      wood1 > Harvester.priceWood;
+      if (selected == null ||
+         !selected.toString().equals("planet") ||
+         selected.side != 0 || 
+         gold1 < Harvester.priceGold ||
+         wood1 < Harvester.priceWood)
+         return false;
+      Pt p = (selected.getCenter().y < WC.M/2)
+         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size+2)
+         : new Pt(selected.getCenter().x-2, selected.p.y-6); // Fix: WORKAROUND :)
+      Harvester unit = new Harvester(p, 0, -1, (Planet)selected);
+      for (FlyObject obj : all)
+         if (unit.touchObject(obj))
+            return false;
+      return true;
    }
    
    public boolean canBuildFighter() {
-      return selected != null &&
-      selected.toString().equals("planet") &&
-      selected.side == 0 &&
-      gold1 > Fighter.priceGold &&
-      wood1 > Fighter.priceWood;
+      if (selected == null ||
+            !selected.toString().equals("planet") ||
+            selected.side != 0 || 
+            gold1 < Fighter.priceGold ||
+            wood1 < Fighter.priceWood)
+            return false;
+      Pt p = (selected.getCenter().y < WC.M/2)
+         ? new Pt(selected.getCenter().x-2, selected.p.y+selected.size+2)
+         : new Pt(selected.getCenter().x-2, selected.p.y-6); // Fix: WORKAROUND :)
+      Fighter unit = new Fighter(p, 0, -1);
+      for (FlyObject obj : all)
+         if (unit.touchObject(obj))
+            return false;
+      return true;
    }
    
    public FlyObject findSelectedObject(Pt p) {
@@ -112,12 +131,14 @@ public class WorldEnv
          if (Old.equals("harvester")) {
             if (New.equals("source")) {
                ((Harvester)selected).targetMine = (Source)newSelect;
-               JOptionPane.showMessageDialog(null, "Harvester selected source!");
+               //JOptionPane.showMessageDialog(null, "Harvester selected source!");
             }
             else if (New.equals("planet") && newSelect.side == 0) {
                ((Harvester)selected).targetPlanet = (Planet)newSelect;
-               JOptionPane.showMessageDialog(null, "Harvester selected planet!");
+               //JOptionPane.showMessageDialog(null, "Harvester selected planet!");
             }
+            newSelect.setSelected(false);
+            newSelect = null;
          }
       }
       selected = newSelect;
@@ -151,11 +172,13 @@ public class WorldEnv
       g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
       g2.drawString("[ Red player ]", WC.LX+WC.W+20, 380);
       g2.setFont(new Font("SansSerif", Font.PLAIN, 18));
-      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 410);
-      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 435);
+      g2.drawString("Gold: " + gold2, WC.LX+WC.W+35, 450);
+      g2.drawString("Wood: " + wood2, WC.LX+WC.W+35, 475);
    }
    
-   public boolean generateWorld() {
+   public void generateWorld() {
+      // Probability for continue is about 0
+      Gen: for ( ;; ) {
       idCounter = 0;
       all.clear();
       planets.clear();
@@ -164,18 +187,13 @@ public class WorldEnv
       fighters.clear();
       gold1 = gold2 = wood1 = wood2 = 50;
       Utils.randomShuffle(randomPoints);
-      if (!generatePlanet(0, 14)) return false;
-      if (!generatePlanet(1, 14)) return false;
-      int countSource = 4;
-      for (int i = 0; i < countSource; i++){
-    	  if(i >= countSource/2)
-    		  if (!generateSource(SourceType.WOOD)) 
-    			  return false;    	  
-		  else if (!generateSource(SourceType.GOLD)) 
-				  return false;
-      }
+         if (!generatePlanet(0, 14)) continue Gen;
+         if (!generatePlanet(1, 14)) continue Gen;
+      for (int i = 0; i < 4; i++)
+            if (!generateSource()) continue Gen;
       selected = null;
-      return true;
+         break;
+      }
    }
    
    // Generate size randomly if corresponding parameter size == -1
@@ -230,7 +248,6 @@ public class WorldEnv
          if (good)
             return p;
       }
-      KissMyAsser.errorFound();
       return null;
    }
 }
