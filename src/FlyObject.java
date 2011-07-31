@@ -20,7 +20,7 @@ abstract class FlyObject
    public void paint(Graphics2D g2) {
       Color c = side == 0 ? Color.BLUE : side == 1 ? Color.RED : Color.GRAY;
       g2.setColor(c);
-      g2.drawOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
+//      g2.drawOval(WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ, size*WC.SZ, size*WC.SZ);
       g2.drawString("side: " + side + " size: " + size + " corner: " + p.toString() + " center: " + getCenter().toString(), WC.LX+p.x*WC.SZ, WC.LY+p.y*WC.SZ);
       //System.out.println(p.toString());
    }
