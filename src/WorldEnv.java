@@ -1,6 +1,9 @@
 import java.util.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,7 +24,11 @@ public class WorldEnv
    FlyObject selected;
    int idCounter;
    
+   private BufferedImage selection;
+   
    public WorldEnv() {
+	  selection = null;
+	  
       all = new LinkedList<FlyObject>();
       planets = new LinkedList<Planet>();
       sources = new LinkedList<Source>();
@@ -33,6 +40,11 @@ public class WorldEnv
             randomPoints.add(new Pt(i, j));
       if (!generateWorld())
          KissMyAsser.errorFound();
+      
+      try {
+		  selection = ImageIO.read(new File("img/selection.gif"));
+   	  }
+	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
    }
    
    public void buildHarvester() {
@@ -123,8 +135,11 @@ public class WorldEnv
    }
    
    public void drawWorld(Graphics2D g2) {
-      for (FlyObject fo : all)
+      for (FlyObject fo : all) {
          fo.paint(g2);
+    	 if (fo.selected)
+    		 g2.drawImage(selection, WC.LX+fo.p.x*WC.SZ-WC.SZ*3/2, WC.LY+fo.p.y*WC.SZ-WC.SZ*3/2, (fo.size+3)*WC.SZ, (fo.size+3)*WC.SZ, null);
+      }
       g2.setColor(Color.BLACK);
       // Blue player (#1)
       g2.setFont(new Font("SansSerif", Font.PLAIN, 20));

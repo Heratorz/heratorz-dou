@@ -18,24 +18,12 @@ abstract class FlyObject
    private final int dx[] = {-1, 0, 1, 0};
    private final int dy[] = {0, 1, 0, -1};
    
-   private BufferedImage selection;
-   
    public FlyObject(Pt P, int Side, int Size, int Id) {
       p = P;
       side = Side;
       size = Size;
       id = Id;
       selected = false;
-      
-      try {
-		  selection = ImageIO.read(new File("img/selection.png"));
-   	  }
-	  catch (Exception e) { e.printStackTrace(); KissMyAsser.errorFound(); }
-   }
-   
-   public void drawSelection(Graphics2D g2) {
-	   if (selected)
-	       g2.drawImage(selection, WC.LX+p.x*WC.SZ-WC.SZ*3/2, WC.LY+p.y*WC.SZ-WC.SZ*3/2, (size+3)*WC.SZ, (size+3)*WC.SZ, null);
    }
    
    public void drawInfo(Graphics2D g2) {
