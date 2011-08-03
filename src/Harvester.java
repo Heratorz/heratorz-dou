@@ -18,8 +18,6 @@ public class Harvester extends FlyObject
    public static final int priceWood = 0;
    BufferedImage bgImage;
    
-   private BufferedImage image;
-   
    public Harvester(Pt P, int Side, int Id, Planet home) {
       super(P, Side, 4, Id);
       cargoGold = cargoWood = 0;
@@ -47,8 +45,8 @@ public class Harvester extends FlyObject
    private void goHome() {
       if (targetMine == null) return;
       if (this.touchObject(targetPlanet)) {
-         WorldEnv.gold1 += cargoGold;
-         WorldEnv.wood1 += cargoWood;
+         if (this.side == 0) { WorldEnv.gold1 += cargoGold; WorldEnv.wood1 += cargoWood; }
+         else { WorldEnv.gold2 += cargoGold; WorldEnv.wood2 += cargoWood; }
          cargoGold = cargoWood = 0;
          //JOptionPane.showMessageDialog(null, "Harvester found resources!");
       }
@@ -66,7 +64,7 @@ public class Harvester extends FlyObject
     	 {
     		 if (targetMine.amount <= 0) return;
     		 int add = 0;
-    		 if(targetMine.amount - WC.HarvCanTakeGold < 0) add = targetMine.amount - WC.HarvCanTakeGold;
+    		 if(targetMine.amount - WC.HarvCanTakeGold < 0) add = targetMine.amount;
     		 else add = WC.HarvCanTakeGold;
     		 cargoGold += add;
     		 targetMine.amount -= add;
@@ -75,7 +73,7 @@ public class Harvester extends FlyObject
     	 {
     		 if (targetMine.amount <= 0) return;
     		 int add = 0;
-    		 if(targetMine.amount - WC.HarvCanTakeWood < 0) add = targetMine.amount - WC.HarvCanTakeWood;
+    		 if(targetMine.amount - WC.HarvCanTakeWood < 0) add = targetMine.amount;
     		 else add = WC.HarvCanTakeWood;
     		cargoWood += add;
     		targetMine.amount -= add;
