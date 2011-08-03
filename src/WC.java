@@ -13,8 +13,4 @@ public final class WC {
    public static final int RGold = 56;
    public static final int HarvCanTakeWood = 10;
    public static final int HarvCanTakeGold = 6;
-   public static final int DefUpgrCost = 15; 
-   public static final int DamUpgrCost = 15; 
-   public static final int DefMax = 3; 
-   public static final int DamMax = 3;
 }

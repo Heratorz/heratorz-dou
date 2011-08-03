@@ -1,7 +1,5 @@
 import java.awt.*;
-
 import javax.swing.*;
-
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
@@ -19,8 +17,6 @@ class HackPanel extends JPanel
    JButton buildHarvesterButton;
    JButton buildFighterButton;
    MouseAdapter userClickListener;
-   JButton upgradeDefenceButton;
-   JButton upgradeDamageButton;
    
    private class NewGameButtonMouseAdapter extends MouseAdapter {
       public void mouseClicked(MouseEvent e) {
@@ -84,7 +80,7 @@ class HackPanel extends JPanel
       this.add(newGameButton);
       // Add "Next turn" button
       nextTurnButton = new JButton("Next turn");
-      nextTurnButton.setBounds(WC.LX+WC.W-400, WC.LY+WC.H+20, 100, 40);
+      nextTurnButton.setBounds(WC.LX+WC.W-100, WC.LY+WC.H+20, 100, 40);
       nextTurnButton.addMouseListener(new NextTurnButtonMouseAdapter());
       nextTurnButton.setBackground(new Color(160, 209, 223));
       nextTurnButton.setForeground(Color.BLACK);
@@ -92,7 +88,7 @@ class HackPanel extends JPanel
       this.add(nextTurnButton);
       // Add "Build harvester" button
       buildHarvesterButton = new JButton("Build harvester");
-      buildHarvesterButton.setBounds(WC.LX+350, WC.LY+WC.H+20, 200, 40);
+      buildHarvesterButton.setBounds(WC.LX+450, WC.LY+WC.H+20, 200, 40);
       buildHarvesterButton.addMouseListener(new BuildHarvesterButtonMouseAdapter());
       buildHarvesterButton.setBackground(new Color(160, 209, 223));
       buildHarvesterButton.setForeground(Color.BLACK);
@@ -100,28 +96,12 @@ class HackPanel extends JPanel
       this.add(buildHarvesterButton);
       // Add "Build fighter" button
       buildFighterButton = new JButton("Build fighter");
-      buildFighterButton.setBounds(WC.LX+540, WC.LY+WC.H+20, 200, 40);
+      buildFighterButton.setBounds(WC.LX+660, WC.LY+WC.H+20, 200, 40);
       buildFighterButton.addMouseListener(new BuildFighterButtonMouseAdapter());
       buildFighterButton.setBackground(new Color(160, 209, 223));
       buildFighterButton.setForeground(Color.BLACK);
       buildFighterButton.setBorder(new LineBorder(Color.DARK_GRAY, 1));
       this.add(buildFighterButton);
-      
-      upgradeDefenceButton = new JButton("Upgrade defence");
-      upgradeDefenceButton.setBounds(WC.LX+WC.W-270, WC.LY+WC.H+20, 110, 40);
-      upgradeDefenceButton.addMouseListener(new UpgradeDefenceButtonMouseAdapter());
-      upgradeDefenceButton.setBackground(new Color(160, 209, 223));
-      upgradeDefenceButton.setForeground(Color.BLACK);
-      upgradeDefenceButton.setBorder(new LineBorder(Color.DARK_GRAY, 1));
-      this.add(upgradeDefenceButton);
-      
-      upgradeDamageButton = new JButton("Upgrade damage");
-      upgradeDamageButton.setBounds(WC.LX+WC.W-150, WC.LY+WC.H+20, 110, 40);
-      upgradeDamageButton.addMouseListener(new UpgradeDamageButtonMouseAdapter());
-      upgradeDamageButton.setBackground(new Color(160, 209, 223));
-      upgradeDamageButton.setForeground(Color.BLACK);
-      upgradeDamageButton.setBorder(new LineBorder(Color.DARK_GRAY, 1));
-      this.add(upgradeDamageButton);
    }
    
    public void paintComponent(Graphics g) {
@@ -136,8 +116,6 @@ class HackPanel extends JPanel
    void updateInterface() {
       buildHarvesterButton.setEnabled(we.canBuildHarvester());
       buildFighterButton.setEnabled(we.canBuildFighter());
-      upgradeDamageButton.setVisible(we.canUpgradeDamage());
-      upgradeDefenceButton.setVisible(we.canUpgradeDefence());
    }
    
    void setBackGroundImage(Graphics2D g2) {
@@ -149,32 +127,16 @@ class HackPanel extends JPanel
    
    void drawGrid(Graphics2D g2) {
       // draw verticals
-      for (int i = 0; i <= WC.W; i+=WC.SZ) {
-         g2.setColor((i == 0 || i == WC.W) ? Color.BLACK : Color.LIGHT_GRAY);
+      g2.setColor(Color.LIGHT_GRAY);
+      for (int i = 0; i <= WC.W; i+=WC.SZ)
          g2.drawLine(WC.LX+i, WC.LY, WC.LX+i, WC.LY+WC.H);
-      }
       // draw horizontals
-      for (int i = 0; i <= WC.H; i+=WC.SZ) {
-         g2.setColor((i == 0 || i == WC.H) ? Color.BLACK : Color.LIGHT_GRAY);
+      for (int i = 0; i <= WC.H; i+=WC.SZ)
          g2.drawLine(WC.LX, WC.LY+i, WC.LX+WC.W, WC.LY+i);
-      }
-   }
-   
-   private class UpgradeDefenceButtonMouseAdapter extends MouseAdapter {
-      public void mouseClicked(MouseEvent e) {
-         if (!upgradeDefenceButton.isVisible())
-            return;
-         we.upgradeDefence();
-         repaint();
-      }
-   }
-   
-   private class UpgradeDamageButtonMouseAdapter extends MouseAdapter {
-      public void mouseClicked(MouseEvent e) {
-         if (!upgradeDamageButton.isVisible())
-            return;
-         we.upgradeDamage();
-         repaint();
-      }
+      g2.setColor(Color.BLACK);
+      g2.drawLine(WC.LX, WC.LY, WC.LX, WC.LY+WC.H);
+      g2.drawLine(WC.LX+WC.W, WC.LY, WC.LX+WC.W, WC.LY+WC.H);
+      g2.drawLine(WC.LX, WC.LY+WC.H, WC.LX+WC.W, WC.LY+WC.H);
+      g2.drawLine(WC.LX, WC.LY, WC.LX+WC.W, WC.LY);
    }
 }
